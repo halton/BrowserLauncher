@@ -24,6 +24,7 @@ async function loadProfiles() {
         `;
 
         li.onclick = () => selectProfile(index);
+        li.ondblclick = () => launchConfiguration(profile);  // Add double-click handler
         profilesList.appendChild(li);
     });
 
@@ -162,6 +163,15 @@ async function moveProfileDown() {
     });
     selectedProfileIndex++;
     loadProfiles();
+}
+
+// Add this function to handle double-click
+async function launchConfiguration(profile) {
+    try {
+        await ipcRenderer.invoke('launch-edge', profile);
+    } catch (error) {
+        alert(`Failed to launch Edge: ${error.message}`);
+    }
 }
 
 // Load profiles when the page loads

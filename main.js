@@ -1,8 +1,17 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const Store = require('electron-store');
+const { exec } = require('child_process');
 
 const store = new Store();
+
+// Add these channel-to-path mappings
+const EDGE_PATHS = {
+    'Canary': '/Applications/Microsoft Edge Canary.app',
+    'Dev': '/Applications/Microsoft Edge Dev.app',
+    'Beta': '/Applications/Microsoft Edge Beta.app',
+    'Stable': '/Applications/Microsoft Edge.app'
+};
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -61,4 +70,28 @@ ipcMain.handle('move-profile', (event, { fromIndex, toIndex }) => {
 ipcMain.handle('update-profiles', (event, profiles) => {
   store.set('profiles', profiles);
   return profiles;
+});
+
+// Add new IPC handler for launching Edge
+ipcMain.handle('launch-edge', (event, config) => {
+    const edgePath = EDGE_PATHS[config.channel];
+    if (!edgePath) {
+        throw new Error(`Invalid Edge channel: ${config.channel}`);
+    }
+
+    // First close the target Edge channel if it's running
+    exec(`pkill -f "${edgePath}"`, (killError) => {
+        // Ignore kill error as the app might not be running
+
+        // Then launch Edge with the configuration
+        const command = `open -a "${edgePath}" --args ${config.arguments}`;
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error launching Edge: ${error}`);
+                return;
+            }
+            // Close the app after successful launch
+            // app.quit();
+        });
+    });
 });
