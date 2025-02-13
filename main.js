@@ -57,3 +57,8 @@ ipcMain.handle('move-profile', (event, { fromIndex, toIndex }) => {
   store.set('profiles', profiles);
   return profiles;
 });
+
+ipcMain.handle('update-profiles', (event, profiles) => {
+  store.set('profiles', profiles);
+  return profiles;
+});

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>EdgeLauncher2</title>
+    <title>BrowserLauncher</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="profile-list">
-            <h2>Profiles</h2>
+            <h2>Configurations</h2>
             <ul id="profilesList"></ul>
         </div>
 
         <div class="profile-form">
-            <h2>Add New Profile</h2>
-            <input type="text" id="profileName" placeholder="Profile Name">
+            <h2>Add New Configuration</h2>
+            <input type="text" id="profileName" placeholder="Configuration Name">
             <select id="channel">
                 <option value="Canary">Canary</option>
                 <option value="Dev">Dev</option>
@@ -22,7 +22,8 @@
             </select>
             <input type="text" id="arguments" placeholder="Arguments">
             <div class="button-group">
-                <button onclick="addProfile()" class="action-btn add-btn">Add Profile</button>
+                <button onclick="addProfile()" class="action-btn add-btn">Add</button>
+                <button onclick="saveProfile()" class="action-btn save-btn" disabled>Save</button>
                 <button onclick="moveProfileUp()" class="action-btn move-btn" disabled>Move Up</button>
                 <button onclick="moveProfileDown()" class="action-btn move-btn" disabled>Move Down</button>
                 <button onclick="removeProfile()" class="action-btn remove-btn" disabled>Remove</button>

@@ -1,7 +1,7 @@
 {
-  "name": "edge-launcher-2",
-  "version": "1.0.1",
-  "description": "Edge Browser Profile Manager and Launcher",
+  "name": "browser-launcher",
+  "version": "1.0.2",
+  "description": "Browser Configuration Manager and Launcher",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
