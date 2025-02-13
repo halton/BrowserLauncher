@@ -6,6 +6,11 @@
 </head>
 <body>
     <div class="container">
+        <div class="profile-list">
+            <h2>Profiles</h2>
+            <ul id="profilesList"></ul>
+        </div>
+
         <div class="profile-form">
             <h2>Add New Profile</h2>
             <input type="text" id="profileName" placeholder="Profile Name">
@@ -22,11 +27,6 @@
                 <button onclick="moveProfileDown()" class="action-btn move-btn" disabled>Move Down</button>
                 <button onclick="removeProfile()" class="action-btn remove-btn" disabled>Remove</button>
             </div>
-        </div>
-
-        <div class="profile-list">
-            <h2>Profiles</h2>
-            <ul id="profilesList"></ul>
         </div>
     </div>
     <script src="renderer.js"></script>
