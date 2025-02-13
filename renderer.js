@@ -18,13 +18,13 @@ async function loadProfiles() {
         li.innerHTML = `
             <div class="profile-info">
                 <strong>${profile.name}</strong> -
-                ${profile.channel} -
+                ${profile.browser} ${profile.channel} -
                 ${profile.arguments}
             </div>
         `;
 
         li.onclick = () => selectProfile(index);
-        li.ondblclick = () => launchConfiguration(profile);  // Add double-click handler
+        li.ondblclick = () => launchConfiguration(profile);
         profilesList.appendChild(li);
     });
 
@@ -34,12 +34,12 @@ async function loadProfiles() {
 function selectProfile(index) {
     selectedProfileIndex = index;
 
-    // Get the selected profile data and fill in the form
     ipcRenderer.invoke('get-profiles').then(allProfiles => {
         if (index >= 0 && index < allProfiles.length) {
             const profile = allProfiles[index];
-            originalProfile = { ...profile };  // Store original data
+            originalProfile = { ...profile };
             document.getElementById('profileName').value = profile.name;
+            document.getElementById('browser').value = profile.browser;
             document.getElementById('channel').value = profile.channel;
             document.getElementById('arguments').value = profile.arguments;
         }
@@ -52,10 +52,12 @@ function checkFormChanges() {
     if (!originalProfile || selectedProfileIndex === -1) return false;
 
     const currentName = document.getElementById('profileName').value;
+    const currentBrowser = document.getElementById('browser').value;
     const currentChannel = document.getElementById('channel').value;
     const currentArguments = document.getElementById('arguments').value;
 
     return currentName !== originalProfile.name ||
+           currentBrowser !== originalProfile.browser ||
            currentChannel !== originalProfile.channel ||
            currentArguments !== originalProfile.arguments;
 }
@@ -80,7 +82,7 @@ function updateButtonStates() {
 
 // Add event listeners to form fields to check for changes
 function addFormChangeListeners() {
-    const fields = ['profileName', 'channel', 'arguments'];
+    const fields = ['profileName', 'browser', 'channel', 'arguments'];
     fields.forEach(fieldId => {
         document.getElementById(fieldId).addEventListener('input', updateButtonStates);
     });
@@ -90,6 +92,7 @@ async function saveProfile() {
     if (selectedProfileIndex === -1 || !checkFormChanges()) return;
 
     const name = document.getElementById('profileName').value;
+    const browser = document.getElementById('browser').value;
     const channel = document.getElementById('channel').value;
     const arguments = document.getElementById('arguments').value;
 
@@ -100,11 +103,11 @@ async function saveProfile() {
 
     // Update existing profile
     const profiles = await ipcRenderer.invoke('get-profiles');
-    profiles[selectedProfileIndex] = { name, channel, arguments };
+    profiles[selectedProfileIndex] = { name, browser, channel, arguments };
     await ipcRenderer.invoke('update-profiles', profiles);
 
     // Update originalProfile to match the new saved state
-    originalProfile = { name, channel, arguments };
+    originalProfile = { name, browser, channel, arguments };
 
     // Reload profiles to show updated data
     loadProfiles();
@@ -113,24 +116,24 @@ async function saveProfile() {
 // Modify addProfile to only handle new profiles
 async function addProfile() {
     const name = document.getElementById('profileName').value;
+    const browser = document.getElementById('browser').value;
     const channel = document.getElementById('channel').value;
     const arguments = document.getElementById('arguments').value;
 
     if (!name) {
-        alert('Please enter a profile name');
+        alert('Please enter a configuration name');
         return;
     }
 
-    // Add new profile
-    const profile = { name, channel, arguments };
+    const profile = { name, browser, channel, arguments };
     await ipcRenderer.invoke('save-profile', profile);
 
     // Clear form
     document.getElementById('profileName').value = '';
-    document.getElementById('channel').value = 'Canary';
+    document.getElementById('browser').value = 'Edge';
+    document.getElementById('channel').value = 'Stable';
     document.getElementById('arguments').value = '';
 
-    // Reload profiles
     loadProfiles();
 }
 
@@ -173,6 +176,11 @@ async function launchConfiguration(profile) {
         alert(`Failed to launch Edge: ${error.message}`);
     }
 }
+
+// Add browser change handler
+document.getElementById('browser').addEventListener('change', () => {
+    updateButtonStates();
+});
 
 // Load profiles when the page loads
 document.addEventListener('DOMContentLoaded', () => {

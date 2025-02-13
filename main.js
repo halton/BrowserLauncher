@@ -5,12 +5,20 @@ const { exec } = require('child_process');
 
 const store = new Store();
 
-// Add these channel-to-path mappings
-const EDGE_PATHS = {
-    'Canary': '/Applications/Microsoft Edge Canary.app',
-    'Dev': '/Applications/Microsoft Edge Dev.app',
-    'Beta': '/Applications/Microsoft Edge Beta.app',
-    'Stable': '/Applications/Microsoft Edge.app'
+// Update browser paths mapping
+const BROWSER_PATHS = {
+    'Edge': {
+        'Canary': '/Applications/Microsoft Edge Canary.app',
+        'Dev': '/Applications/Microsoft Edge Dev.app',
+        'Beta': '/Applications/Microsoft Edge Beta.app',
+        'Stable': '/Applications/Microsoft Edge.app'
+    },
+    'Chrome': {
+        'Canary': '/Applications/Google Chrome Canary.app',
+        'Dev': '/Applications/Google Chrome Dev.app',
+        'Beta': '/Applications/Google Chrome Beta.app',
+        'Stable': '/Applications/Google Chrome.app'
+    }
 };
 
 function createWindow() {
@@ -72,22 +80,22 @@ ipcMain.handle('update-profiles', (event, profiles) => {
   return profiles;
 });
 
-// Add new IPC handler for launching Edge
+// Update the launch handler
 ipcMain.handle('launch-edge', (event, config) => {
-    const edgePath = EDGE_PATHS[config.channel];
-    if (!edgePath) {
-        throw new Error(`Invalid Edge channel: ${config.channel}`);
+    const browserPath = BROWSER_PATHS[config.browser][config.channel];
+    if (!browserPath) {
+        throw new Error(`Invalid browser/channel combination: ${config.browser} ${config.channel}`);
     }
 
-    // First close the target Edge channel if it's running
-    exec(`pkill -f "${edgePath}"`, (killError) => {
+    // First close the target browser if it's running
+    exec(`pkill -f "${browserPath}"`, (killError) => {
         // Ignore kill error as the app might not be running
 
-        // Then launch Edge with the configuration
-        const command = `open -a "${edgePath}" --args ${config.arguments}`;
+        // Then launch browser with the configuration
+        const command = `open -a "${browserPath}" --args ${config.arguments}`;
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                console.error(`Error launching Edge: ${error}`);
+                console.error(`Error launching browser: ${error}`);
                 return;
             }
             // Close the app after successful launch
