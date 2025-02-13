@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EdgeLauncher2</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-form">
+            <h2>Add New Profile</h2>
+            <input type="text" id="profileName" placeholder="Profile Name">
+            <select id="channel">
+                <option value="Canary">Canary</option>
+                <option value="Dev">Dev</option>
+                <option value="Beta">Beta</option>
+                <option value="Stable">Stable</option>
+            </select>
+            <input type="text" id="arguments" placeholder="Arguments">
+            <button onclick="addProfile()">Add Profile</button>
+        </div>
+
+        <div class="profile-list">
+            <h2>Profiles</h2>
+            <ul id="profilesList"></ul>
+        </div>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+</html>
