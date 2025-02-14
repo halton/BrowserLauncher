@@ -3,6 +3,12 @@ const path = require('path');
 const Store = require('electron-store');
 const { exec } = require('child_process');
 
+// Set application name before app is ready
+if (process.platform === 'darwin') {
+    const { name } = require('./package.json');
+    app.setName('Browser Launcher');
+}
+
 const store = new Store();
 
 // Update browser paths mapping for all platforms
@@ -50,19 +56,45 @@ const BROWSER_PATHS = {
 };
 
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  const iconPath = path.join(__dirname, 'icons',
+    process.platform === 'win32' ? 'icon.ico' :
+    'icon.png'
+  );
+
+  const windowOptions = {
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     }
-  });
+  };
+
+  // Only set icon if file exists
+  if (require('fs').existsSync(iconPath)) {
+    windowOptions.icon = iconPath;
+  }
+
+  const mainWindow = new BrowserWindow(windowOptions);
 
   mainWindow.loadFile('index.html');
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+    // Set the application icon for macOS
+    if (process.platform === 'darwin') {
+        const iconPath = path.join(__dirname, 'icons', 'icon.png');
+        try {
+            if (require('fs').existsSync(iconPath)) {
+                app.dock.setIcon(iconPath);
+            }
+        } catch (error) {
+            console.warn('Failed to set dock icon:', error);
+        }
+    }
+
+    createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

@@ -1,3 +1,9 @@
 node_modules/
 dist/
 .DS_Store
+# Generated icons
+icons/icon.ico
+icons/icon.icns
+icons/icon.png
+icons/icon.iconset/
+icons/icon_base.png

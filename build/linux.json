@@ -1,0 +1,8 @@
+{
+  "desktop": {
+    "Name": "Browser Launcher",
+    "Comment": "Browser Configuration Manager and Launcher",
+    "Categories": "Utility;",
+    "Icon": "browser-launcher"
+  }
+}

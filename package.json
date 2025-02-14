@@ -1,7 +1,8 @@
 {
   "name": "browser-launcher",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Browser Configuration Manager and Launcher",
+  "productName": "Browser Launcher",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -12,20 +13,40 @@
   },
   "build": {
     "appId": "com.browserlauncher.app",
-    "productName": "BrowserLauncher",
+    "productName": "Browser Launcher",
     "directories": {
       "output": "dist"
     },
+    "icon": "icons/icon",
     "mac": {
       "category": "public.app-category.utilities",
-      "target": ["dmg", "zip"]
+      "target": ["dmg", "zip"],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
     },
     "win": {
-      "target": ["nsis", "portable"]
+      "target": ["nsis", "portable"],
+      "icon": "icons/icon.ico",
+      "fileAssociations": [],
+      "extraFiles": [
+        {
+          "from": "build/installer.nsh",
+          "to": "installer.nsh"
+        }
+      ]
     },
     "linux": {
       "target": ["AppImage", "deb"],
-      "category": "Utility"
+      "category": "Utility",
+      "icon": "icons/icon.png",
+      "desktop": {
+        "Name": "Browser Launcher",
+        "Comment": "Browser Configuration Manager and Launcher",
+        "Categories": "Utility;",
+        "Icon": "browser-launcher"
+      }
     }
   },
   "dependencies": {
