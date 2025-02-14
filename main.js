@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const Store = require('electron-store');
 const { exec } = require('child_process');
@@ -157,4 +157,14 @@ ipcMain.handle('launch-edge', (event, config) => {
             // app.quit();
         });
     });
+});
+
+// Add version handler
+ipcMain.handle('get-version', () => {
+    return app.getVersion();
+});
+
+// Add external URL handler
+ipcMain.handle('open-external', (event, url) => {
+    shell.openExternal(url);
 });

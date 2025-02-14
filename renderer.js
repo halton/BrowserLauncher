@@ -187,3 +187,30 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProfiles();
     addFormChangeListeners();
 });
+
+async function showAbout() {
+    const version = await ipcRenderer.invoke('get-version');
+    const aboutHtml = `
+        <div class="about-dialog">
+            <h2>BrowserLauncher</h2>
+            <p>Version ${version}</p>
+            <p>Copyright © 2024 BrowserLauncher</p>
+            <p>Licensed under the <a href="#" onclick="openExternal('https://github.com/halton/BrowserLauncher/blob/main/LICENSE')">MIT License</a></p>
+            <p><a href="#" onclick="openExternal('https://github.com/halton/BrowserLauncher')">GitHub Repository</a></p>
+            <button onclick="closeAbout()" class="action-btn">Close</button>
+        </div>
+    `;
+
+    const dialog = document.createElement('div');
+    dialog.innerHTML = aboutHtml;
+    document.body.appendChild(dialog);
+}
+
+function closeAbout() {
+    const dialog = document.querySelector('.about-dialog').parentElement;
+    document.body.removeChild(dialog);
+}
+
+function openExternal(url) {
+    ipcRenderer.invoke('open-external', url);
+}
