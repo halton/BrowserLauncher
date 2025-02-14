@@ -1,6 +1,6 @@
 {
   "name": "browser-launcher",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Browser Configuration Manager and Launcher",
   "main": "main.js",
   "scripts": {
