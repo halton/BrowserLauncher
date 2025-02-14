@@ -1,15 +1,38 @@
 {
   "name": "browser-launcher",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Browser Configuration Manager and Launcher",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.browserlauncher.app",
+    "productName": "BrowserLauncher",
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": ["dmg", "zip"]
+    },
+    "win": {
+      "target": ["nsis", "portable"]
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility"
+    }
   },
   "dependencies": {
     "electron-store": "^8.1.0"
   },
   "devDependencies": {
-    "electron": "^28.1.0"
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1"
   }
 }
